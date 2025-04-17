@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import { request } from "@arcjet/next";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@clerk/nextjs/server";
 
 const serializeTransaction = (obj) => {
   const serialized = { ...obj };
@@ -18,12 +19,13 @@ const serializeTransaction = (obj) => {
 };
 
 export async function getUserAccounts() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
-
+  const clerkUser = await currentUser();
+  if (!clerkUser) throw new Error("Unauthorized");
+  
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { clerkUserId: clerkUser.id },
   });
+  
 
   if (!user) {
     throw new Error("User not found");
@@ -53,8 +55,8 @@ export async function getUserAccounts() {
 
 export async function createAccount(data) {
   try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
+    const { id: userId } = await currentUser();
+    if (!userId) throw new Error("Unauthorized");    
 
     // Get request data for ArcJet
     const req = await request();
@@ -135,8 +137,9 @@ export async function createAccount(data) {
 }
 
 export async function getDashboardData() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { id: userId } = await currentUser();
+if (!userId) throw new Error("Unauthorized");
+
 
   const user = await db.user.findUnique({
     where: { clerkUserId: userId },
