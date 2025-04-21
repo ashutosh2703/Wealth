@@ -42,7 +42,7 @@ const Hero = () => {
             </div>
             <div className=" hero-image-wrapper">
                 <div ref={imageRef} className="hero-image">
-                    <Image src="/banner.jpeg" width={1280} height={720} alt="Dashboard preview" className=" rounded-lg shadow-2xl border mx-auto" priority ></Image>
+                    <Image src="/banner.png" width={1280} height={720} alt="Dashboard preview" className=" rounded-lg shadow-2xl border mx-auto" priority ></Image>
                 </div>
             </div>
         </div>
